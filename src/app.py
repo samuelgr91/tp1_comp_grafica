@@ -4,7 +4,7 @@ from src.vtk_loader import load_vtk
 from src.renderer import Renderer
 
 class App:
-    def __init__(self, data_dir, n_term_str="064"):
+    def __init__(self, data_dir, n_term_str="064", initial_step=8, step_inc=8):
         self.window = None
         self.renderer = Renderer()
         
@@ -13,10 +13,10 @@ class App:
         self.n_term = n_term_str # "064", "128", "256"
         
         # State
-        self.current_step = 8
-        self.step_increment = 8
+        self.current_step = initial_step
+        self.step_increment = step_inc
         self.max_step = int(n_term_str) # usually goes up to Nterm
-        self.min_step = 8
+        self.min_step = initial_step
         
         self.model = None
         self.needs_update = True
