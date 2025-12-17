@@ -22,17 +22,42 @@ class Renderer:
             t = (radius - self.min_radius) / (self.max_radius - self.min_radius)
         t = max(0.0, min(1.0, t))
         
-        # Green Pipeline directly matching the reference image.
-        # Dark Green (low radius) -> Bright Green (high radius)
-        # Low radius (thin) -> Darker green (e.g. 0.0, 0.4, 0.0)
-        # High radius (thick) -> Brighter green (e.g. 0.2, 1.0, 0.2)
+        # Jet/Rainbow Colormap (Blue -> Cyan -> Green -> Yellow -> Red)
+        # 4 segments: 0-0.25, 0.25-0.5, 0.5-0.75, 0.75-1.0
         
-        # Simple Linear interpolation
-        # r = 0.0
-        # g = 0.3 + 0.7 * t  (from 0.3 to 1.0)
-        # b = 0.0
+        r, g, b = 0.0, 0.0, 0.0
         
-        return (0.0, 0.3 + 0.7 * t, 0.0)
+        if t < 0.25:
+            # Blue (0,0,1) -> Cyan (0,1,1)
+            # t goes 0 -> 0.25. Normalize to 0 -> 1
+            local_t = t / 0.25
+            r, g, b = 0.0, local_t, 1.0
+        elif t < 0.5:
+            # Cyan (0,1,1) -> Green (0,1,0)
+            local_t = (t - 0.25) / 0.25
+            r, g, b = 0.0, 1.0, 1.0 - local_t
+        elif t < 0.75:
+            # Green (0,1,0) -> Yellow (1,1,0)
+            local_t = (t - 0.5) / 0.25
+            r, g, b = local_t, 1.0, 0.0
+        else:
+            # Yellow (1,1,0) -> Red (1,0,0)
+            local_t = (t - 0.75) / 0.25
+            r, g, b = 1.0, 1.0 - local_t, 0.0
+            
+        return (r, g, b)
+
+    def draw_circle(self, x, y, radius, color):
+        glColor3f(*color)
+        num_segments = 12 # decent approximation for small circles
+        glBegin(GL_TRIANGLE_FAN)
+        glVertex2f(x, y) # center
+        for i in range(num_segments + 1):
+            theta = 2.0 * math.pi * float(i) / float(num_segments)
+            dx = radius * math.cos(theta)
+            dy = radius * math.sin(theta)
+            glVertex2f(x + dx, y + dy)
+        glEnd()
 
     def render(self, model, view_params):
         if not model:
@@ -75,13 +100,15 @@ class Renderer:
             self.max_radius = max(model.radii)
             self.min_radius = min(model.radii)
 
-        glBegin(GL_QUADS)
-        
         for i, (p1_idx, p2_idx) in enumerate(model.segments):
             x1, y1, z1 = model.vertices[p1_idx]
             x2, y2, z2 = model.vertices[p2_idx]
             r = model.radii[i]
             
+            # Color
+            c = self.get_color(r)
+            glColor3f(*c)
+
             # Draw segment as quad
             dx = x2 - x1
             dy = y2 - y1
@@ -97,21 +124,17 @@ class Renderer:
             nx = -uy
             ny = ux
             
-            # Thickness scaled 
-            # Note: r is radius, so full width is 2*r.
-            # But visually, we might need to scale it if units are tiny.
-            # Based on image, radii are ~0.02 vs coords ~0.05. It's comparable.
-            
             rx = nx * r
             ry = ny * r
             
-            # Color
-            c = self.get_color(r)
-            glColor3f(*c)
-            
+            glBegin(GL_QUADS)
             glVertex2f(x1 + rx, y1 + ry)
             glVertex2f(x2 + rx, y2 + ry)
             glVertex2f(x2 - rx, y2 - ry)
             glVertex2f(x1 - rx, y1 - ry)
+            glEnd()
             
-        glEnd()
+            # Draw rounded joints (circles) at endpoints
+            # Drawing at both ends helps smooth connections
+            self.draw_circle(x1, y1, r, c)
+            self.draw_circle(x2, y2, r, c)

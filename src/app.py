@@ -26,7 +26,7 @@ class App:
             'zoom': 1.0,
             'pan_x': 0.0,
             'pan_y': 0.0,
-            'rotation': 0.0
+            'rotation': 180.0 # Root at top, growing down
         }
         
         self.last_mouse_pos = (0, 0)
@@ -82,7 +82,7 @@ class App:
                 self.needs_update = False
 
             # Render
-            r, g, b = 0.0, 0.0, 0.0 # Black background
+            r, g, b = 1.0, 1.0, 1.0 # White background
             from OpenGL.GL import glClear, glClearColor, GL_COLOR_BUFFER_BIT
             glClearColor(r, g, b, 1.0)
             glClear(GL_COLOR_BUFFER_BIT)
