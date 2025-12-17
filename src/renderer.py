@@ -22,13 +22,16 @@ class Renderer:
             t = (radius - self.min_radius) / (self.max_radius - self.min_radius)
         t = max(0.0, min(1.0, t))
         
-        # Green Neon Gradient (Dark Green -> Bright Neon Green)
-        # Thin branches: Dark green (0.0, 0.3, 0.0)
-        # Thick branches: Bright neon green (0.2, 1.0, 0.2)
+        # Enhanced Green Gradient with stronger contrast
+        # Thin branches (far from root): Very dark green, almost invisible
+        # Thick branches (root): Bright neon green
         
-        r = 0.0 + 0.2 * t  # Slight red for brightness
-        g = 0.3 + 0.7 * t  # Main green channel
-        b = 0.0 + 0.2 * t  # Slight blue for brightness
+        # Use power function for non-linear brightness
+        brightness = t ** 0.7  # Makes thin branches darker
+        
+        r = 0.0 + 0.3 * brightness  # More red for neon effect
+        g = 0.15 + 0.85 * brightness  # Darker base, brighter peak
+        b = 0.0 + 0.3 * brightness  # More blue for neon effect
             
         return (r, g, b)
 
@@ -108,8 +111,9 @@ class Renderer:
             glColor3f(*c)
 
             # Draw segment as line with thickness
-            # Increased multiplier for better visual contrast
-            glLineWidth(r * 200)  # Increased from 100 to 200
+            # Enhanced scaling: thin branches very thin, thick branches very thick
+            thickness = (r ** 1.2) * 250  # Non-linear scaling for more contrast
+            glLineWidth(max(0.5, thickness))  # Minimum 0.5 to keep thin branches visible
             glBegin(GL_LINES)
             glVertex2f(x1, y1)
             glVertex2f(x2, y2)
