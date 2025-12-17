@@ -179,16 +179,15 @@ class App:
             pan_speed = 0.002 / self.view_params['zoom']
             rot_speed = 0.5
             
-            if self.mouse_button == glfw.MOUSE_BUTTON_RIGHT or self.mouse_button == glfw.MOUSE_BUTTON_MIDDLE:
-                # Pan: moving mouse right (positive dx) should move view left (pan_x decrease)??
-                # Typically: dragging world. If I drag mouse right, I expect world to move right.
-                # In renderer: translate(-pan_x, -pan_y).
-                # So if pan_x decreases, -pan_x increases, world moves right.
+            if self.mouse_button == glfw.MOUSE_BUTTON_LEFT:
+                # Left button: Pan (move the tree around)
+                # More intuitive: click on background to move view
                 self.view_params['pan_x'] -= dx * pan_speed
-                self.view_params['pan_y'] += dy * pan_speed # dy is usually down-positive in screen, but y is up-positive
+                self.view_params['pan_y'] += dy * pan_speed
                 
-            elif self.mouse_button == glfw.MOUSE_BUTTON_LEFT:
-                # Rotate
+            elif self.mouse_button == glfw.MOUSE_BUTTON_RIGHT or self.mouse_button == glfw.MOUSE_BUTTON_MIDDLE:
+                # Right/Middle button: Rotate
+                # Click on tree to rotate it
                 self.view_params['rotation'] += dx * rot_speed
 
     def scroll_callback(self, window, xoffset, yoffset):
