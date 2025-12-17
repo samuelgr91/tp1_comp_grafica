@@ -37,7 +37,8 @@ def main():
             base_data_path = relative_path
             print(f"Found at relative path: {base_data_path}")
     
-    app = App(base_data_path, n_term_str="256")
+    # Nterm_256: steps are 32, 64, 96, ..., 256 (increment of 32)
+    app = App(base_data_path, n_term_str="256", initial_step=32, step_inc=32)
     
     if app.init_gl():
         app.run()
