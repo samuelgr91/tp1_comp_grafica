@@ -49,7 +49,7 @@ class Renderer:
 
     def draw_circle(self, x, y, radius, color):
         glColor3f(*color)
-        num_segments = 12 # decent approximation for small circles
+        num_segments = 8 # Optimized for performance (was 12)
         glBegin(GL_TRIANGLE_FAN)
         glVertex2f(x, y) # center
         for i in range(num_segments + 1):
