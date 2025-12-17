@@ -1,5 +1,15 @@
 import os
 import sys
+
+
+# Add the project root directory to sys.path so we can import modules from 'src'
+# This is necessary because we are running this script directly from inside 'src'
+# but the code uses absolute imports like 'from src.app ...'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from src.app import App
 
 def main():
