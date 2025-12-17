@@ -72,10 +72,7 @@ class App:
         if os.path.exists(filepath):
             print(f"Loading: {filepath}")
             self.model = load_vtk(filepath)
-            if self.model:
-                # Initialize animation to show first segment
-                if self.model.visible_count is None:
-                    self.model.visible_count = 1
+            # Model will show all segments by default (visible_count = None)
         else:
             print(f"File not found: {filepath}")
 
