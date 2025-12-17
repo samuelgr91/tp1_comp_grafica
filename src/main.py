@@ -37,8 +37,15 @@ def main():
             base_data_path = relative_path
             print(f"Found at relative path: {base_data_path}")
     
-    # Nterm_256: steps are 32, 64, 96, ..., 256 (increment of 32)
-    app = App(base_data_path, n_term_str="256", initial_step=32, step_inc=32)
+    # Auto-detect dataset parameters
+    from src.dataset_utils import auto_detect_dataset
+    try:
+        n_term, initial_step, step_inc = auto_detect_dataset(base_data_path)
+        app = App(base_data_path, n_term_str=n_term, initial_step=initial_step, step_inc=step_inc)
+    except Exception as e:
+        print(f"Error auto-detecting dataset: {e}")
+        print("Using default parameters...")
+        app = App(base_data_path, n_term_str="064", initial_step=8, step_inc=8)
     
     if app.init_gl():
         app.run()
