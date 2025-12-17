@@ -29,7 +29,7 @@ class App:
         
         # View params
         self.view_params = {
-            'zoom': 1.0,
+            'zoom': 3.0,  # Start zoomed in for better visibility
             'pan_x': 0.0,
             'pan_y': 0.0,
             'rotation': 180.0 # Root at top, growing down
