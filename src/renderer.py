@@ -68,7 +68,7 @@ class Renderer:
         
         # Ortho projection centered on (0,0) locally, zoomed by scale, panned by translation
         # Aspect ratio handling:
-        aspect = self.width / self.height
+        aspect = self.width / max(self.height, 1)  # Prevent division by zero
         
         zoom = view_params['zoom']
         pan_x = view_params['pan_x']
