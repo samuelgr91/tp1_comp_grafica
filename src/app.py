@@ -22,7 +22,7 @@ class App:
         self.needs_update = True
         
         # Animation state
-        self.animation_playing = True  # Auto-play by default
+        self.animation_playing = False  # Manual control only (use Space to play)
         self.animation_speed = 2.0  # Segments per second
         self.animation_timer = 0.0
         self.last_frame_time = None
