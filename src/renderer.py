@@ -22,28 +22,13 @@ class Renderer:
             t = (radius - self.min_radius) / (self.max_radius - self.min_radius)
         t = max(0.0, min(1.0, t))
         
-        # Jet/Rainbow Colormap (Blue -> Cyan -> Green -> Yellow -> Red)
-        # 4 segments: 0-0.25, 0.25-0.5, 0.5-0.75, 0.75-1.0
+        # Green Neon Gradient (Dark Green -> Bright Neon Green)
+        # Thin branches: Dark green (0.0, 0.3, 0.0)
+        # Thick branches: Bright neon green (0.2, 1.0, 0.2)
         
-        r, g, b = 0.0, 0.0, 0.0
-        
-        if t < 0.25:
-            # Blue (0,0,1) -> Cyan (0,1,1)
-            # t goes 0 -> 0.25. Normalize to 0 -> 1
-            local_t = t / 0.25
-            r, g, b = 0.0, local_t, 1.0
-        elif t < 0.5:
-            # Cyan (0,1,1) -> Green (0,1,0)
-            local_t = (t - 0.25) / 0.25
-            r, g, b = 0.0, 1.0, 1.0 - local_t
-        elif t < 0.75:
-            # Green (0,1,0) -> Yellow (1,1,0)
-            local_t = (t - 0.5) / 0.25
-            r, g, b = local_t, 1.0, 0.0
-        else:
-            # Yellow (1,1,0) -> Red (1,0,0)
-            local_t = (t - 0.75) / 0.25
-            r, g, b = 1.0, 1.0 - local_t, 0.0
+        r = 0.0 + 0.2 * t  # Slight red for brightness
+        g = 0.3 + 0.7 * t  # Main green channel
+        b = 0.0 + 0.2 * t  # Slight blue for brightness
             
         return (r, g, b)
 
