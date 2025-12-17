@@ -2,9 +2,7 @@ import os
 import sys
 
 
-# Add the project root directory to sys.path so we can import modules from 'src'
-# This is necessary because we are running this script directly from inside 'src'
-# but the code uses absolute imports like 'from src.app ...'
+# Ensure project root is in sys.path for correct module resolution
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 if project_root not in sys.path:
@@ -21,9 +19,7 @@ def main():
     
     base_data_path = r"C:\Users\samuk\OneDrive\Documentos\trabalho_comp_grafica\TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_064"
     
-    # If the user wants to switch dataset (e.g. 128), they can change this or we can add argv support.
-    
-    # Check command line arguments for data path
+    # Parse command line arguments for data path
     if len(sys.argv) > 1:
         arg_path = sys.argv[1]
         if os.path.exists(arg_path):
