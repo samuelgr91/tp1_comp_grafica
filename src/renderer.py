@@ -92,6 +92,12 @@ class Renderer:
             segments_to_render = model.segments[:model.visible_count]
             radii_to_render = model.radii[:model.visible_count]
 
+        # Enable line smoothing for rounder appearance
+        glEnable(GL_LINE_SMOOTH)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
         for i, (p1_idx, p2_idx) in enumerate(segments_to_render):
             x1, y1, z1 = model.vertices[p1_idx]
             x2, y2, z2 = model.vertices[p2_idx]
@@ -102,8 +108,13 @@ class Renderer:
             glColor3f(*c)
 
             # Draw segment as line with thickness
-            glLineWidth(r * 100)  # Scale radius to visible line width
+            # Increased multiplier for better visual contrast
+            glLineWidth(r * 200)  # Increased from 100 to 200
             glBegin(GL_LINES)
             glVertex2f(x1, y1)
             glVertex2f(x2, y2)
             glEnd()
+        
+        # Disable smoothing after rendering
+        glDisable(GL_LINE_SMOOTH)
+        glDisable(GL_BLEND)
