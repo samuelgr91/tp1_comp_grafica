@@ -116,32 +116,9 @@ class Renderer:
             c = self.get_color(r)
             glColor3f(*c)
 
-            # Draw segment as quad
-            dx = x2 - x1
-            dy = y2 - y1
-            length = math.sqrt(dx*dx + dy*dy)
-            
-            if length == 0:
-                continue
-                
-            ux = dx / length
-            uy = dy / length
-            
-            # Perpendicular vector
-            nx = -uy
-            ny = ux
-            
-            rx = nx * r
-            ry = ny * r
-            
-            glBegin(GL_QUADS)
-            glVertex2f(x1 + rx, y1 + ry)
-            glVertex2f(x2 + rx, y2 + ry)
-            glVertex2f(x2 - rx, y2 - ry)
-            glVertex2f(x1 - rx, y1 - ry)
+            # Draw segment as line with thickness
+            glLineWidth(r * 100)  # Scale radius to visible line width
+            glBegin(GL_LINES)
+            glVertex2f(x1, y1)
+            glVertex2f(x2, y2)
             glEnd()
-            
-            # Draw rounded joints (circles) at endpoints
-            # Drawing at both ends helps smooth connections
-            self.draw_circle(x1, y1, r, c)
-            self.draw_circle(x2, y2, r, c)
