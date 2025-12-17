@@ -23,6 +23,15 @@ def main():
     
     # If the user wants to switch dataset (e.g. 128), they can change this or we can add argv support.
     
+    # Check command line arguments for data path
+    if len(sys.argv) > 1:
+        arg_path = sys.argv[1]
+        if os.path.exists(arg_path):
+            base_data_path = arg_path
+            print(f"Using data path from argument: {base_data_path}")
+        else:
+            print(f"Warning: Argument path {arg_path} does not exist. Using default.")
+
     if not os.path.exists(base_data_path):
         print(f"Error: Data directory not found at {base_data_path}")
         print("Please check paths.")
