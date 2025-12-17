@@ -17,7 +17,7 @@ def main():
     # We try to find the data relative to where we are or use absolute.
     # Let's try to locate the Nterm_064 folder.
     
-    base_data_path = r"C:\Users\samuk\OneDrive\Documentos\trabalho_comp_grafica\TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_064"
+    base_data_path = r"C:\Users\samuk\OneDrive\Documentos\trabalho_comp_grafica\TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_256"
     
     # Parse command line arguments for data path
     if len(sys.argv) > 1:
