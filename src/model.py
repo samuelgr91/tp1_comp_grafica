@@ -6,6 +6,7 @@ class Model2D:
         self.segments = []  # List of [start_index, end_index]
         self.radii = []     # List of float radius per segment
         self.bounds = None  # (min_x, max_x, min_y, max_y)
+        self.visible_count = None  # None = show all, int = show first N segments
 
     def compute_bounds(self):
         if not self.vertices:

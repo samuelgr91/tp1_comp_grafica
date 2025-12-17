@@ -100,10 +100,17 @@ class Renderer:
             self.max_radius = max(model.radii)
             self.min_radius = min(model.radii)
 
-        for i, (p1_idx, p2_idx) in enumerate(model.segments):
+        # Determine how many segments to render (for animation)
+        segments_to_render = model.segments
+        radii_to_render = model.radii
+        if model.visible_count is not None:
+            segments_to_render = model.segments[:model.visible_count]
+            radii_to_render = model.radii[:model.visible_count]
+
+        for i, (p1_idx, p2_idx) in enumerate(segments_to_render):
             x1, y1, z1 = model.vertices[p1_idx]
             x2, y2, z2 = model.vertices[p2_idx]
-            r = model.radii[i]
+            r = radii_to_render[i]
             
             # Color
             c = self.get_color(r)

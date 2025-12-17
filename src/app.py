@@ -21,6 +21,12 @@ class App:
         self.model = None
         self.needs_update = True
         
+        # Animation state
+        self.animation_playing = True  # Auto-play by default
+        self.animation_speed = 2.0  # Segments per second
+        self.animation_timer = 0.0
+        self.last_frame_time = None
+        
         # View params
         self.view_params = {
             'zoom': 1.0,
@@ -67,15 +73,38 @@ class App:
             print(f"Loading: {filepath}")
             self.model = load_vtk(filepath)
             if self.model:
-                # Optional: auto-center on first load?
-                pass
+                # Initialize animation to show first segment
+                if self.model.visible_count is None:
+                    self.model.visible_count = 1
         else:
             print(f"File not found: {filepath}")
 
     def run(self):
         self.load_current_step()
+        import time
+        self.last_frame_time = time.time()
         
         while not glfw.window_should_close(self.window):
+            # Update animation timer
+            current_time = time.time()
+            dt = current_time - self.last_frame_time
+            self.last_frame_time = current_time
+            
+            # Progressive animation
+            if self.animation_playing and self.model and self.model.visible_count is not None:
+                self.animation_timer += dt * self.animation_speed
+                if self.animation_timer >= 1.0:
+                    self.animation_timer = 0.0
+                    if self.model.visible_count < len(self.model.segments):
+                        self.model.visible_count += 1
+                    else:
+                        # Reached end, load next step
+                        if self.current_step < self.max_step:
+                            self.current_step += self.step_increment
+                            self.needs_update = True
+                        else:
+                            self.animation_playing = False  # Stop at end
+            
             # Update logic
             if self.needs_update:
                 self.load_current_step()
@@ -97,14 +126,40 @@ class App:
     # Callbacks
     def key_callback(self, window, key, scancode, action, mods):
         if action == glfw.PRESS or action == glfw.REPEAT:
-            if key == glfw.KEY_RIGHT:
-                if self.current_step < self.max_step:
-                    self.current_step += self.step_increment
-                    self.needs_update = True
+            if key == glfw.KEY_SPACE:
+                # Toggle play/pause
+                self.animation_playing = not self.animation_playing
+                print(f"Animation: {'Playing' if self.animation_playing else 'Paused'}")
+            elif key == glfw.KEY_RIGHT:
+                # Speed up or skip forward
+                if self.model and self.model.visible_count is not None:
+                    self.model.visible_count = min(self.model.visible_count + 5, len(self.model.segments))
+                else:
+                    if self.current_step < self.max_step:
+                        self.current_step += self.step_increment
+                        self.needs_update = True
             elif key == glfw.KEY_LEFT:
-                if self.current_step > self.min_step:
-                    self.current_step -= self.step_increment
-                    self.needs_update = True
+                # Slow down or skip backward
+                if self.model and self.model.visible_count is not None:
+                    self.model.visible_count = max(self.model.visible_count - 5, 1)
+                else:
+                    if self.current_step > self.min_step:
+                        self.current_step -= self.step_increment
+                        self.needs_update = True
+            elif key == glfw.KEY_UP:
+                # Increase speed
+                self.animation_speed *= 1.5
+                print(f"Speed: {self.animation_speed:.1f} segments/sec")
+            elif key == glfw.KEY_DOWN:
+                # Decrease speed
+                self.animation_speed /= 1.5
+                print(f"Speed: {self.animation_speed:.1f} segments/sec")
+            elif key == glfw.KEY_R:
+                # Reset animation
+                if self.model:
+                    self.model.visible_count = 1
+                    self.animation_playing = True
+                print("Animation reset")
             elif key == glfw.KEY_ESCAPE:
                 glfw.set_window_should_close(window, True)
 
