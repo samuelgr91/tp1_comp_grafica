@@ -32,12 +32,12 @@ def main():
         print(f"Error: Data directory not found at {base_data_path}")
         print("Please check paths.")
         # Fallback for relative path if running from project root
-        relative_path = os.path.join("TP_CCO_Pacote_Dados", "TP_CCO_Pacote_Dados", "TP1_2D", "Nterm_064")
+        relative_path = os.path.join("TP_CCO_Pacote_Dados", "TP_CCO_Pacote_Dados", "TP1_2D", "Nterm_256")
         if os.path.exists(relative_path):
             base_data_path = relative_path
             print(f"Found at relative path: {base_data_path}")
     
-    app = App(base_data_path, n_term_str="064")
+    app = App(base_data_path, n_term_str="256")
     
     if app.init_gl():
         app.run()
