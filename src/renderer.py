@@ -22,10 +22,17 @@ class Renderer:
             t = (radius - self.min_radius) / (self.max_radius - self.min_radius)
         t = max(0.0, min(1.0, t))
         
-        # Blue (0,0,1) to Red (1,0,0) pipeline
-        # Maybe Green in middle? 
-        # Low -> Blue, High -> Red
-        return (t, 0.0, 1.0 - t)
+        # Green Pipeline directly matching the reference image.
+        # Dark Green (low radius) -> Bright Green (high radius)
+        # Low radius (thin) -> Darker green (e.g. 0.0, 0.4, 0.0)
+        # High radius (thick) -> Brighter green (e.g. 0.2, 1.0, 0.2)
+        
+        # Simple Linear interpolation
+        # r = 0.0
+        # g = 0.3 + 0.7 * t  (from 0.3 to 1.0)
+        # b = 0.0
+        
+        return (0.0, 0.3 + 0.7 * t, 0.0)
 
     def render(self, model, view_params):
         if not model:

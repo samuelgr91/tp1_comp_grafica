@@ -82,7 +82,7 @@ class App:
                 self.needs_update = False
 
             # Render
-            r, g, b = 0.1, 0.1, 0.12 # Dark background
+            r, g, b = 0.0, 0.0, 0.0 # Black background
             from OpenGL.GL import glClear, glClearColor, GL_COLOR_BUFFER_BIT
             glClearColor(r, g, b, 1.0)
             glClear(GL_COLOR_BUFFER_BIT)
