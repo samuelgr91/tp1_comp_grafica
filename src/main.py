@@ -11,10 +11,10 @@ if project_root not in sys.path:
 from src.app import App
 
 def main():
-    # Caminho padrão para os dados
+    # Caminho padrão para os dados (relativo à raiz do projeto)
     # Pode ser alterado via linha de comando
     
-    base_data_path = r"C:\Users\samuk\OneDrive\Documentos\trabalho_comp_grafica\TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_256"
+    base_data_path = os.path.join("TP_CCO_Pacote_Dados", "TP_CCO_Pacote_Dados", "TP1_2D", "Nterm_256")
     
     # Verifica se foi passado um caminho via linha de comando
     if len(sys.argv) > 1:
