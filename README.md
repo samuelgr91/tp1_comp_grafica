@@ -1,5 +1,16 @@
 # TP1 - Visualização de Árvore Arterial 2D
 
+## Configuração Inicial
+
+**IMPORTANTE**: Antes de executar, edite o arquivo `src/main.py` na linha 15 e altere o caminho `base_data_path` para o caminho correto dos dados na sua máquina.
+
+Exemplo:
+```python
+base_data_path = r"C:\SEU_CAMINHO\TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_256"
+```
+
+Ou use a linha de comando (recomendado) para não precisar editar o código.
+
 ## Como Executar
 
 ### Execução Básica
