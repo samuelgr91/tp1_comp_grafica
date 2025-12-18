@@ -4,27 +4,27 @@ import re
 
 def auto_detect_dataset(data_dir):
     """
-    Automatically detect VTK files in a directory and determine:
-    - n_term (from folder name or file pattern)
-    - initial_step (first step number)
-    - step_increment (difference between consecutive steps)
+    Detecta automaticamente os arquivos VTK em um diretório e determina:
+    - n_term (do nome da pasta ou padrão do arquivo)
+    - initial_step (primeiro número de step)
+    - step_increment (diferença entre steps consecutivos)
     
-    Returns: (n_term_str, initial_step, step_increment)
+    Retorna: (n_term_str, initial_step, step_increment)
     """
-    # Find all VTK files
+    # Encontra todos os arquivos VTK
     vtk_files = glob.glob(os.path.join(data_dir, "*.vtk"))
     
     if not vtk_files:
-        raise ValueError(f"No VTK files found in {data_dir}")
+        raise ValueError(f"Nenhum arquivo VTK encontrado em {data_dir}")
     
-    # Extract step numbers from filenames
-    # Pattern: tree2D_Nterm0064_step0008.vtk
+    # Extrai números de step dos nomes dos arquivos
+    # Padrão: tree2D_Nterm0064_step0008.vtk
     step_numbers = []
     n_term_from_file = None
     
     for filepath in vtk_files:
         filename = os.path.basename(filepath)
-        # Match pattern: Nterm####_step####
+        # Procura padrão: Nterm####_step####
         match = re.search(r'Nterm(\d+)_step(\d+)', filename)
         if match:
             if n_term_from_file is None:
@@ -32,20 +32,20 @@ def auto_detect_dataset(data_dir):
             step_numbers.append(int(match.group(2)))
     
     if not step_numbers:
-        raise ValueError(f"Could not parse VTK filenames in {data_dir}")
+        raise ValueError(f"Não foi possível interpretar os nomes dos arquivos VTK em {data_dir}")
     
-    # Sort step numbers
+    # Ordena os números de step
     step_numbers.sort()
     
-    # Determine increment (difference between first two steps)
+    # Determina o incremento (diferença entre os dois primeiros steps)
     if len(step_numbers) >= 2:
         step_increment = step_numbers[1] - step_numbers[0]
     else:
-        step_increment = step_numbers[0]  # Only one file
+        step_increment = step_numbers[0]  # Só um arquivo
     
     initial_step = step_numbers[0]
     
-    # Try to get n_term from folder name first
+    # Tenta pegar n_term do nome da pasta primeiro
     folder_name = os.path.basename(data_dir)
     match = re.search(r'Nterm_(\d+)', folder_name)
     if match:
@@ -53,10 +53,10 @@ def auto_detect_dataset(data_dir):
     elif n_term_from_file:
         n_term_str = n_term_from_file
     else:
-        # Fallback: use max step number
+        # Fallback: usa o número máximo de step
         n_term_str = str(max(step_numbers))
     
-    print(f"Auto-detected: n_term={n_term_str}, initial_step={initial_step}, increment={step_increment}")
-    print(f"Found {len(step_numbers)} files: {step_numbers}")
+    print(f"Auto-detectado: n_term={n_term_str}, initial_step={initial_step}, incremento={step_increment}")
+    print(f"Encontrados {len(step_numbers)} arquivos: {step_numbers}")
     
     return n_term_str, initial_step, step_increment
