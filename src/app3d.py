@@ -141,6 +141,8 @@ class App3D:
         from OpenGL.GL import GL_FLAT
         if key == glfw.KEY_SPACE:
             self.animation_playing = not self.animation_playing
+            if self.animation_playing and self.model and self.model.visible_count is None:
+                self.model.visible_count = 1
         elif key == glfw.KEY_RIGHT:
             if self.model and self.model.visible_count is not None:
                 self.model.visible_count = min(self.model.visible_count + 5, len(self.model.segment_list))

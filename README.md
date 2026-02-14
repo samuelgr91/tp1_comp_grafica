@@ -10,13 +10,13 @@ python src/main.py
 ### Escolher Dataset Específico
 ```bash
 # Para árvore com 64 segmentos terminais:
-python src/main.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_064"
+python src/main.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP1_2D/Nterm_064"
 
 # Para árvore com 128 segmentos terminais:
-python src/main.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_128"
+python src/main.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP1_2D/Nterm_128"
 
 # Para árvore com 256 segmentos terminais:
-python src/main.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP1_2D\Nterm_256"
+python src/main.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP1_2D/Nterm_256"
 ```
 
 ## Controles
@@ -73,26 +73,28 @@ python src/main3d.py
 
 ### Escolher Dataset 3D
 ```bash
-python src/main3d.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP2_3D\Nterm_128"
-python src/main3d.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP2_3D\Nterm_256"
-python src/main3d.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP2_3D\Nterm_512"
+python src/main3d.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP2_3D/Nterm_128"
+python src/main3d.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP2_3D/Nterm_256"
+python src/main3d.py "TP_CCO_Pacote_Dados/TP_CCO_Pacote_Dados/TP2_3D/Nterm_512"
 ```
 
-## Controles TP2 (igual TP1 + extras 3D)
+## Controles TP2
 
 ### Mouse
-- **Botão Esquerdo**: Arrastar = orbita a câmera (árvore no centro)
-- **Botão Direito** ou **Shift+Esquerdo**: Arrastar = pan (move a cena lateralmente)
-- **Clique** (sem arrastar) = selecionar segmento
-- **Rodinha**: Zoom suave (aproxima/afasta)
+- **Botão Esquerdo + Arrastar**: Orbitar câmera em torno da árvore (árvore no centro)
+- **Botão Direito + Arrastar** ou **Shift + Botão Esquerdo + Arrastar**: Pan (mover a cena lateralmente)
+- **Clique** (sem arrastar): Selecionar segmento (picking) — mostra info no console
+- **Rodinha**: Zoom (aproximar/afastar)
 
-### Teclado (navegação como TP1)
-- **Seta Direita/Esquerda**: Próximo/anterior arquivo (step)
-- **Seta Cima/Baixo**: Velocidade da animação
-- **Espaço**: Play/pause animação
-- **0**: Reset animação (começar do início)
+### Teclado — Navegação
+- **Seta Direita (→)**: Próximo arquivo (step) ou +5 segmentos visíveis (se em modo animação)
+- **Seta Esquerda (←)**: Arquivo anterior ou -5 segmentos visíveis
+- **Seta Cima (↑)**: Aumentar velocidade da animação
+- **Seta Baixo (↓)**: Diminuir velocidade da animação
+- **Espaço**: Play/pause animação de crescimento — se a árvore estiver completa, inicia do início
+- **0**: Reset da animação (volta ao primeiro segmento e inicia play automático)
 
-### Teclado (opções TP2)
+### Teclado — Opções de visualização
 - **R**: Raio fixo ↔ variável
 - **1**: Iluminação Flat
 - **2**: Iluminação Smooth
@@ -103,17 +105,17 @@ python src/main3d.py "TP_CCO_Pacote_Dados\TP_CCO_Pacote_Dados\TP2_3D\Nterm_512"
 ## Funcionalidades TP2
 
 1. **Estrutura de árvore explícita**: parent_of, children_of, root. Validação (acíclico, 1 pai por nó)
-2. **Tubos 3D**: Cada ramo = cilindro (raio fixo) ou frustum (raio variável). Caps só na raiz e folhas (continuidade nas bifurcações)
+2. **Ramos 3D**: Linhas OpenGL com espessura variável (raio fixo ou variável por segmento)
 3. **Mesma lógica do TP1**: raiz → tronco → galhos → ramificações → folhas. Troca de arquivo = mais/menos ramos
-4. **Projeção perspectiva** + câmera orbitante
-5. **Iluminação** Flat/Smooth, coloração por depth/radius
-6. **Animação**: crescimento por ordem BFS (raiz primeiro, galhos surgindo progressivamente)
+4. **Projeção perspectiva** + câmera orbitante (orbit, pan, zoom)
+5. **Iluminação** Flat (tecla 1) / Smooth (tecla 2), coloração por depth ou radius (tecla C)
+6. **Animação de crescimento**: ordem BFS (raiz primeiro, galhos surgindo progressivamente). Espaço = play/pause, 0 = reset
 
 ## Estrutura do Código TP2
 
 - `src/main3d.py`: Ponto de entrada TP2
 - `src/app3d.py`: App 3D com câmera orbitante e controles
-- `src/renderer3d.py`: Renderização de tubos, iluminação, perspectiva
+- `src/renderer3d.py`: Renderização 3D (linhas com espessura), iluminação, perspectiva
 - `src/vtk_loader_3d.py`: Loader VTK para modelo 3D
 - `src/model3d.py`: Modelo 3D com Segment e depth (BFS)
 - `src/picking.py`: Ray cast para seleção de segmentos
